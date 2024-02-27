@@ -1,17 +1,19 @@
 import kotlinx.atomicfu.atomic
 import kotlinx.atomicfu.atomicArrayOfNulls
 
-private const val COLLISION_SIZE = 16
+private const val COLLISION_SIZE = 8
 
 class OptimizedTreiberStack<T>: Stack<T> {
     private val headNode = atomic<Node<T>?>(null)
     private val collisionArray = atomicArrayOfNulls<T>(COLLISION_SIZE)
+    //TODO: Add a random collisionPosition selection
     private val collisionPosition = atomic(0)
 
     override fun top(): T? {
         return headNode.value?.value
     }
 
+    //TODO: Get rid of recursive calls
     private fun tryCollisionPush(value: T) {
         val pos = collisionPosition.getAndIncrement() % COLLISION_SIZE
         val collisionPos = collisionArray[pos]
@@ -32,6 +34,7 @@ class OptimizedTreiberStack<T>: Stack<T> {
         tryCollisionPush(value)
     }
 
+    //TODO: Get rid of recursive calls
     private fun tryCollisionPop(): T? {
         val pos = collisionPosition.getAndIncrement() % COLLISION_SIZE
         val collisionPos = collisionArray[pos]
