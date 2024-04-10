@@ -1,5 +1,5 @@
 import sequentialStack.SequentialIntStack
-import treiberStack.TreiberStack
+import eliminationTreiberStack.EliminationTreiberStack
 import kotlinx.coroutines.*
 import kotlin.random.Random
 import kotlin.system.measureTimeMillis
@@ -11,8 +11,8 @@ import org.jetbrains.kotlinx.lincheck.strategy.stress.StressOptions
 import org.junit.jupiter.api.Test
 
 @Suppress("UNUSED")
-class TreiberStackTest {
-    private val treiberStack = TreiberStack<Int>()
+class EliminationTreiberStackTest {
+    private val treiberStack = EliminationTreiberStack<Int>()
 
     @Operation
     fun push(value: Int) = treiberStack.push(value)
@@ -51,7 +51,8 @@ class TreiberStackTest {
     fun performanceTest() {
         val threads = 8
         val iterations = 1000000
-        val stack = TreiberStack<Int>()
+        val stack = EliminationTreiberStack<Int>()
+
 
         var executionTime = 0L
         repeat(10) {
@@ -77,6 +78,6 @@ class TreiberStackTest {
         }
         executionTime /= 10
 
-        println("Execution time of treiberStack.TreiberStack: $executionTime milliseconds")
+        println("Execution time of EliminationTreiberStack: $executionTime milliseconds")
     }
 }
