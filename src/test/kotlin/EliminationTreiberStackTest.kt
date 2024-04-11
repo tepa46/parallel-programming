@@ -49,10 +49,9 @@ class EliminationTreiberStackTest {
     @OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
     @Test
     fun performanceTest() {
-        val threads = 8
+        val threads = 12
         val iterations = 1000000
         val stack = EliminationTreiberStack<Int>()
-
 
         var executionTime = 0L
         repeat(10) {
@@ -60,14 +59,13 @@ class EliminationTreiberStackTest {
             val time = measureTimeMillis {
                 runBlocking {
                     repeat(threads) { curThread ->
-                        jobs.add(launch(newSingleThreadContext(curThread.toString() + "PUSH")) {
+                        jobs.add(launch(newSingleThreadContext(curThread.toString() + "OP")) {
                             repeat(iterations) {
-                                stack.push(Random.nextInt(1_000_000_000))
-                            }
-                        })
-                        jobs.add(launch(newSingleThreadContext((curThread + threads).toString() + "POP")) {
-                            repeat(iterations) {
-                                stack.pop()
+                                if (curThread % 2 == 0) {
+                                    stack.push(Random.nextInt(1_000_000_000))
+                                } else {
+                                    stack.pop()
+                                }
                             }
                         })
                     }
